@@ -72,8 +72,29 @@ app.patch("/jokes/:id", (req, res) =>{
 })
 
 //7. DELETE Specific joke
+app.delete("/jokes/:id", (req, res)=>{
+  var id = parseInt(req.params["id"]);
+  var index = jokes.findIndex((joke) => joke["id"] === id);
+  //check if entry exist/found first
+  if(index > -1){
+    jokes.splice(index, 1);
+    res.sendStatus(200);
+  }
+  else{
+    res.status(404).json({error: "Entry not found"});
+  }
+})
 
 //8. DELETE All jokes
+app.delete("/all", (req, res)=>{
+  if(masterKey == req.query["key"]){
+    jokes = [];
+    res.sendStatus(200);
+  }
+  else{
+    res.status(404).json({error: "You are not authorized"});
+  }
+})
 
 app.listen(port, () => {
   console.log(`Successfully started server on port ${port}.`);
